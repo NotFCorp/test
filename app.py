@@ -233,16 +233,27 @@ def formulario():
         </form>
     '''
 
+@app.route('/estado_pago_form')
+def estado_pago_form():
+    return '''
+        <h2>Consultar estado de pago</h2>
+        <form action="/estado_pago" method="get">
+            <label for="payment_id">Payment ID:</label><br>
+            <input type="text" id="payment_id" name="payment_id" required>
+            <br><br>
+            <button type="submit">Consultar</button>
+        </form>
+    '''
     
 @app.route('/estado_pago')
 def estado_pago():
     payment_id = request.args.get('payment_id')
     
     if not payment_id:
-        return "Falta el Payment ID."
+        return "Falta el Payment ID. <a href='/estado_pago_form'>Volver</a>"
     
     try:
-        mp = mercadopago.SDK(acceso)  # Inicializa el SDK con tu token
+        mp = mercadopago.SDK(acceso)
         pago = mp.payment().get(payment_id)
         info = pago["response"]
 
@@ -253,16 +264,18 @@ def estado_pago():
         email = info.get("payer", {}).get("email", "no disponible")
 
         return f"""
-            <h3>Estado del pago:</h3>
+            <h3>Estado del pago</h3>
             <p><strong>ID:</strong> {payment_id}</p>
             <p><strong>Estado:</strong> {estado}</p>
             <p><strong>Monto:</strong> ${monto}</p>
             <p><strong>Método de pago:</strong> {metodo}</p>
             <p><strong>Fecha:</strong> {fecha}</p>
             <p><strong>Email del pagador:</strong> {email}</p>
+            <br><a href="/estado_pago_form">Consultar otro</a>
         """
     except Exception as e:
-        return f"Error al consultar el estado: {str(e)}"
+        return f"Error al consultar el estado: {str(e)} <br><a href='/estado_pago_form'>Volver</a>"
+
 
 
 @app.route('/compra')
