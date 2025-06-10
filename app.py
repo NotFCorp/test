@@ -193,8 +193,9 @@ def pago():
     respuesta = mp.preference().create(datos_preferencia)
     print("Respuesta completa:", respuesta)
 
-    if "response" in respuesta and "sandbox_init_point" in respuesta["response"]:
-        return redirect(respuesta["response"]["sandbox_init_point"])
+    if "response" in respuesta:
+        # Usar init_point (producción)
+        return redirect(respuesta["response"]["init_point"])
     else:
         mensaje = respuesta.get("response", {}).get("message", "Error desconocido")
         return f"Error al crear la preferencia de pago: {mensaje}", 500
