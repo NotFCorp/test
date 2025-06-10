@@ -173,7 +173,7 @@ def pago():
                 "description": "Tour de prueba por la ciudad",
                 "quantity": 1,
                 "currency_id": "ARS",
-                "unit_price": 100.0
+                "unit_price": 1
             }
         ],
         "payer": {
