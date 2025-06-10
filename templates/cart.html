@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Carrito de Compras</title>
+</head>
+<body>
+    <h1>Tu Carrito de Compras</h1>
+    {% if items_carrito %}
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Precio Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items_carrito %}
+            <tr>
+                <td>{{ item.nombre }}</td>
+                <td>${{ "%.2f"|format(item.precio) }}</td>
+<td>
+    <form action="{{ url_for('actualizar_cantidad_carrito', id_producto=item.id) }}" method="post" style="display:inline;">
+        <input type="number" name="cantidad" value="{{ item.cantidad }}" min="0" style="width: 50px;" 
+            onkeydown="if(event.key === 'Enter'){this.form.submit(); return false;}" 
+            onblur="this.form.submit();">
+    </form>
+</td>
+                <td>${{ "%.2f"|format(item.precio_total) }}</td>
+                <td>
+                    <form action="{{ url_for('eliminar_del_carrito', id_producto=item.id) }}" method="post" style="display:inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3>Monto Total: ${{ "%.2f"|format(monto_total) }}</h3>
+    <form action="{{ url_for('pago') }}" method="post" style="display:inline;">
+        <button type="submit">Pagar con Mercado Pago</button>
+    </form>
+    <form action="{{ url_for('compra') }}" method="get" style="display:inline; margin-left: 10px;">
+        <button type="submit">Comprar sin Mercado Pago</button>
+    </form>
+    {% else %}
+    <p>Tu carrito está vacío.</p>
+    {% endif %}
+    <br>
+    <a href="{{ url_for('inicio') }}">Seguir Comprando</a>
+</body>
+</html>

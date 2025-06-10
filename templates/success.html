@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Productos</title>
+</head>
+<body>
+    <h1>Catálogo de Productos</h1>
+    <ul>
+        {% for producto in productos %}
+        <li>
+            <strong>{{ producto.nombre }}</strong> - ${{ "%.2f"|format(producto.precio) }}
+            <a href="{{ url_for('agregar_al_carrito', id_producto=producto.id) }}">Agregar al Carrito</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('ver_carrito') }}">Ver Carrito</a>
+</body>
+</html>
