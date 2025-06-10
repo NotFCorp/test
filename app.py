@@ -208,11 +208,62 @@ def pendiente():
 
 @app.route('/success')
 def exito():
-    return "¡Pago realizado con éxito! 🎉"
+    payment_id = request.args.get('payment_id')
+    status = request.args.get('status')
+    
+    # Por ejemplo, guardar en la sesión (podés usar una base de datos también)
+
+    return f"""
+        <h1>¡Pago {status}!</h1>
+        <p>Guardá este ID para verificar el estado después: <strong>{payment_id}</strong></p>
+        <a href="/estado_pago?payment_id={payment_id}">Ver estado ahora</a>
+    """
 
 @app.route('/failure')
 def fracaso():
     return redirect(url_for('ver_carrito'))
+
+@app.route('/test')
+def formulario():
+    return '''
+        <h2>Consultar estado de pago</h2>
+        <form action="/estado_pago" method="get">
+            <input type="text" name="payment_id" placeholder="Ingresá el Payment ID" required>
+            <button type="submit">Consultar</button>
+        </form>
+    '''
+
+    
+@app.route('/estado_pago')
+def estado_pago():
+    payment_id = request.args.get('payment_id')
+    
+    if not payment_id:
+        return "Falta el Payment ID."
+    
+    try:
+        mp = mercadopago.SDK(acceso)  # Inicializa el SDK con tu token
+        pago = mp.payment().get(payment_id)
+        info = pago["response"]
+
+        estado = info.get("status", "desconocido").upper()
+        monto = info.get("transaction_amount", "no disponible")
+        metodo = info.get("payment_method_id", "no disponible")
+        fecha = info.get("date_created", "no disponible")
+        email = info.get("payer", {}).get("email", "no disponible")
+
+        return f"""
+            <h3>Estado del pago:</h3>
+            <p><strong>ID:</strong> {payment_id}</p>
+            <p><strong>Estado:</strong> {estado}</p>
+            <p><strong>Monto:</strong> ${monto}</p>
+            <p><strong>Método de pago:</strong> {metodo}</p>
+            <p><strong>Fecha:</strong> {fecha}</p>
+            <p><strong>Email del pagador:</strong> {email}</p>
+        """
+    except Exception as e:
+        return f"Error al consultar el estado: {str(e)}"
+
 
 @app.route('/compra')
 def compra():
