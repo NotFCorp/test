@@ -212,7 +212,7 @@ def exito():
 
 @app.route('/failure')
 def fracaso():
-    return "El pago ha fallado. Por favor, intenta nuevamente."
+    return redirect(url_for('ver_carrito'))
 
 @app.route('/compra')
 def compra():
