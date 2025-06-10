@@ -26,7 +26,7 @@ app.secret_key = 'tu_clave_secreta_aqui'  # Reemplazar con una clave segura en p
 
 # Inicializar el SDK de Mercado Pago con el token de acceso
 # Token de prueba de Mercado Pago (modo sandbox)
-acceso = "APP_USR-6805275870267830-060919-f4a758236bccbdd9a72238c762ba5d44-2489455942"
+acceso = "APP_USR-218618312072752-060915-538210917ad09d14afd2bd92534d7ce2-1401112199"
 
 from functools import wraps
 from flask import flash
@@ -182,12 +182,12 @@ def pago():
             "email": "test_user_123456@testuser.com"  # ¡Correo de test válido!
         },
         "back_urls": {
-            "success": "http://localhost:5000/success",
-            "failure": "http://localhost:5000/failure",
-            "pending": "http://localhost:5000/pending"
+        "success": "https://test-jzbx.onrender.com/success",
+        "failure": "https://test-jzbx.onrender.com/failure",
+        "pending": "https://test-jzbx.onrender.com/pending"
         },
         # Esta línea fue comentada para poder utilizar el código en entorno local. Debe ser descomentada al subirse al servidor. 
-        #"auto_return": "approved"
+        "auto_return": "approved"
     }
 
     respuesta = mp.preference().create(datos_preferencia)
